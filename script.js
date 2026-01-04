@@ -1,4 +1,4 @@
-// NAVEGAÇÃO
+// NAVEGAÇÃO ENTRE TELAS
 function irPara(id) {
     document.querySelectorAll('.view').forEach(v => {
         v.style.opacity = '0';
@@ -17,7 +17,6 @@ const canvas = document.getElementById('preview-canvas');
 const ctx = canvas.getContext('2d');
 
 document.getElementById('drop-zone').onclick = () => fileInput.click();
-
 fileInput.onchange = (e) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -40,13 +39,7 @@ function convertImage(format) {
     link.click();
 }
 
-function convertToBase64() {
-    const base64 = canvas.toDataURL();
-    navigator.clipboard.writeText(base64);
-    alert("Código Base64 copiado para a área de transferência!");
-}
-
-// --- DADOS ---
+// --- DADOS E MARKDOWN ---
 function jsonToCsv() {
     try {
         const json = JSON.parse(document.getElementById('data-input').value);
@@ -56,30 +49,37 @@ function jsonToCsv() {
     } catch(e) { alert("JSON inválido"); }
 }
 
-function csvToJson() {
-    try {
-        const csv = document.getElementById('data-input').value.split('\n');
-        const headers = csv[0].split(',');
-        const result = csv.slice(1).map(line => {
-            const data = line.split(',');
-            return headers.reduce((obj, h, i) => { obj[h.trim()] = data[i]?.trim(); return obj; }, {});
-        });
-        document.getElementById('data-output').value = JSON.stringify(result, null, 2);
-    } catch(e) { alert("CSV inválido"); }
+function htmlToMarkdown() {
+    const html = document.getElementById('data-input').value;
+    const turndownService = new TurndownService();
+    document.getElementById('data-output').value = turndownService.turndown(html);
 }
 
-// --- DEV ---
-function hexToRgb() {
-    const hex = document.getElementById('hex-in').value;
-    if(/^#([A-Fa-f0-9]{6})$/.test(hex)) {
-        const r = parseInt(hex.slice(1,3), 16);
-        const g = parseInt(hex.slice(3,5), 16);
-        const b = parseInt(hex.slice(5,7), 16);
-        document.getElementById('rgb-out').innerText = `rgb(${r}, ${g}, ${b})`;
+// --- DEV TOOLS (QR CODE & MINIFY) ---
+function gerarQR() {
+    const text = document.getElementById('qr-input').value;
+    const qrContainer = document.getElementById('qr-result');
+    if (text) {
+        qrContainer.innerHTML = "";
+        QRCode.toCanvas(text, { width: 130, margin: 2 }, (err, cv) => {
+            if (!err) qrContainer.appendChild(cv);
+        });
     }
 }
 
-function decToBin() {
-    const dec = parseInt(document.getElementById('dec-in').value);
-    if(!isNaN(dec)) document.getElementById('bin-out').innerText = dec.toString(2);
+function minifyCode() {
+    const input = document.getElementById('code-input').value;
+    const minified = input.replace(/\s+/g, ' ').replace(/\/\*.*?\*\//g, '').trim();
+    document.getElementById('code-input').value = minified;
+    alert("Código comprimido!");
+}
+
+// --- UNIDADES ---
+function converterDados() {
+    const gb = parseFloat(document.getElementById('gb-input').value);
+    if (!isNaN(gb)) {
+        document.getElementById('res-mb').innerText = (gb * 1024).toLocaleString();
+        document.getElementById('res-tb').innerText = (gb / 1024).toFixed(4);
+        document.getElementById('res-bt').innerText = (gb * 1024 * 1024 * 1024).toLocaleString();
+    }
 }
