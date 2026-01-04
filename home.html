@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartConvert | All-in-One</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main id="home" class="view">
+        <header>
+            <h1>Smart<span>Convert</span></h1>
+            <p>Selecione a conversão local e segura</p>
+        </header>
+
+        <div class="card-grid">
+            <div class="glass-card main-card" onclick="irPara('conv-img')">
+                <div class="icon-box purple">🖼️</div>
+                <div class="card-text"><h3>Imagens</h3><p>JPG, PNG e Base64.</p></div>
+            </div>
+
+            <div class="glass-card main-card" onclick="irPara('conv-data')">
+                <div class="icon-box blue">📊</div>
+                <div class="card-text"><h3>Dados</h3><p>JSON e CSV.</p></div>
+            </div>
+
+            <div class="glass-card main-card" onclick="irPara('conv-dev')">
+                <div class="icon-box green">💻</div>
+                <div class="card-text"><h3>Dev Tools</h3><p>Cores e Bases.</p></div>
+            </div>
+        </div>
+    </main>
+
+    <section id="conv-img" class="view hidden">
+        <div class="glass-card tool-page">
+            <button class="btn-back" onclick="irPara('home')">← Voltar</button>
+            <h2>🖼️ Conversor de Imagens</h2>
+            
+            <div class="upload-area" id="drop-zone">
+                <p>Arraste uma imagem ou clique aqui</p>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+
+            <div id="img-preview-container" class="hidden">
+                <canvas id="preview-canvas"></canvas>
+                <div class="btn-group">
+                    <button class="btn-action" onclick="convertImage('image/jpeg')">Para JPG</button>
+                    <button class="btn-action outline" onclick="convertImage('image/png')">Para PNG</button>
+                </div>
+                <button class="btn-action" style="margin-top:10px; background: var(--accent-blue)" onclick="convertToBase64()">Gerar Base64</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="conv-data" class="view hidden">
+        <div class="glass-card tool-page">
+            <button class="btn-back" onclick="irPara('home')">← Voltar</button>
+            <h2>📊 JSON ⇄ CSV</h2>
+            <textarea id="data-input" placeholder="Cole seu código aqui..."></textarea>
+            <div class="btn-group">
+                <button class="btn-action" onclick="jsonToCsv()">JSON para CSV</button>
+                <button class="btn-action outline" onclick="csvToJson()">CSV para JSON</button>
+            </div>
+            <textarea id="data-output" placeholder="O resultado aparecerá aqui..." readonly></textarea>
+        </div>
+    </section>
+
+    <section id="conv-dev" class="view hidden">
+        <div class="glass-card tool-page">
+            <button class="btn-back" onclick="irPara('home')">← Voltar</button>
+            <h2>💻 Ferramentas Dev</h2>
+            
+            <div class="input-field">
+                <label>HEX para RGB</label>
+                <input type="text" id="hex-in" placeholder="#6366f1" oninput="hexToRgb()">
+                <div class="display-res"><h2 id="rgb-out">rgb(99, 102, 241)</h2></div>
+            </div>
+
+            <div class="input-field" style="margin-top: 20px;">
+                <label>Decimal para Binário</label>
+                <input type="number" id="dec-in" placeholder="Ex: 255" oninput="decToBin()">
+                <div class="display-res"><h2 id="bin-out">11111111</h2></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
